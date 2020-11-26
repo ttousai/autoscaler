@@ -62,7 +62,8 @@ type (
 			Labels      map[string]string `envconfig:"DRONE_AGENT_LABELS"`
 		}
 
-		Runner Runner
+		Installer Installer
+		Runner    Runner
 
 		GC struct {
 			Enabled  bool          `envconfig:"DRONE_GC_ENABLED"`
@@ -212,6 +213,11 @@ type (
 			UserData       string `envconfig:"DRONE_SCALEWAY_USERDATA"`
 			UserDataFile   string `envconfig:"DRONE_SCALEWAY_USERDATA_FILE"`
 		}
+	}
+
+	Installer struct {
+		Enabled bool   `envconfig:"DRONE_INSTALLER_ENABLED" default:"true"`
+		Type    string `envconfig:"DRONE_INSTALLER_TYPE" default:"docker"`
 	}
 
 	Runner struct {
