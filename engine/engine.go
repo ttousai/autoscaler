@@ -71,7 +71,6 @@ func New(
 			host:               config.Server.Host,
 			client:             newDockerClient,
 			runner:             config.Runner,
-			installer:          config.Installer,
 			checkInterval:      config.Check.Interval,
 			checkDeadline:      config.Check.Deadline,
 			gcEnabled:          config.GC.Enabled,
@@ -86,8 +85,9 @@ func New(
 			watchtowerInterval: config.Watchtower.Interval,
 		},
 		pinger: &pinger{
-			servers: servers,
-			client:  newDockerClient,
+			servers:  servers,
+			client:   newDockerClient,
+			interval: config.Pinger.Interval,
 		},
 		planner: &planner{
 			client:  client,
@@ -223,12 +223,12 @@ func (e *engine) plan(ctx context.Context) {
 
 // runs the ping process.
 func (e *engine) ping(ctx context.Context) {
-	const interval = time.Minute * 10
+	// by default, the pinger is run every 10m.
 	for {
 		select {
 		case <-ctx.Done():
 			return
-		case <-time.After(interval):
+		case <-time.After(e.pinger.interval):
 			e.pinger.Ping(ctx)
 		}
 	}

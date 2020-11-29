@@ -28,8 +28,9 @@ func init() {
 type pinger struct {
 	wg sync.WaitGroup
 
-	servers autoscaler.ServerStore
-	client  clientFunc
+	servers  autoscaler.ServerStore
+	client   clientFunc
+	interval time.Duration
 }
 
 func (p *pinger) Ping(ctx context.Context) error {
