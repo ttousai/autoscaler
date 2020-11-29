@@ -10,7 +10,7 @@ import (
 )
 
 func TestSSHClient(t *testing.T) {
-	client, closer, err := testSSHClient("foo")
+	client, closer, err := testSSHClient(nil)
 	if err != nil {
 		t.Errorf("%s\n", err)
 	}
@@ -23,4 +23,19 @@ func TestSSHClient(t *testing.T) {
 	if !strings.Contains(out, "niinai") {
 		t.Errorf("username doesn't match")
 	}
+}
+
+func TestPing(t *testing.T) {
+	_, closer, err := testSSHClient(nil)
+	if err != nil {
+		t.Errorf("%s\n", err)
+	}
+	defer closer.Close()
+
+	/*
+		out, err := client.Ping()
+		if err != nil {
+			t.Errorf("%s\n", err)
+		}
+	*/
 }

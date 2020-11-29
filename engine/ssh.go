@@ -20,11 +20,11 @@ type sshClient struct {
 // clientFunc defines a builder funciton used to build and return
 // the SSH client to a Server. This is primarily used for
 // mock unit testing.
-// type sshClientFunc func(*autoscaler.Server) (*sshClient, io.Closer, error)
-type sshClientFunc func(interface{}) (*sshClient, io.Closer, error)
+// type sshClientFunc func(interface{}) (*sshClient, io.Closer, error)
+type sshClientFunc func(*autoscaler.Server) (*sshClient, io.Closer, error)
 
 // SSH client for unit testing
-func testSSHClient(any string) (*sshClient, io.Closer, error) {
+func testSSHClient(server *autoscaler.Server) (*sshClient, io.Closer, error) {
 	var privateKeyFilePath = "/Users/niinai/.ssh/ttousai_rsa"
 	key, err := ioutil.ReadFile(privateKeyFilePath)
 	if err != nil {
@@ -114,4 +114,14 @@ func (client *sshClient) Run(cmd string) (string, error) {
 	}
 
 	return stdoutBuf.String(), err
+}
+
+// Ping
+func (client *sshClient) Ping() (string, error) {
+	// out, err := client.Run("ps -C sshd -ocomm=")
+	out, err := client.Run("ps -C drone-runner-exec -ocomm=")
+	if err != nil {
+		return out, err
+	}
+	return out, nil
 }

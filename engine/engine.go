@@ -71,6 +71,7 @@ func New(
 			host:               config.Server.Host,
 			client:             newDockerClient,
 			runner:             config.Runner,
+			installer:          config.Installer,
 			checkInterval:      config.Check.Interval,
 			checkDeadline:      config.Check.Deadline,
 			gcEnabled:          config.GC.Enabled,
@@ -85,9 +86,11 @@ func New(
 			watchtowerInterval: config.Watchtower.Interval,
 		},
 		pinger: &pinger{
-			servers:  servers,
-			client:   newDockerClient,
-			interval: config.Pinger.Interval,
+			servers:   servers,
+			client:    newDockerClient,
+			installer: config.Installer,
+			sshclient: newSSHClient,
+			interval:  config.Pinger.Interval,
 		},
 		planner: &planner{
 			client:  client,
